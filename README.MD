@@ -49,7 +49,11 @@
 ## FrontEnd
 
 - React 17.0.2
-- AntD 4.18.3
+- Ant Design 5.1.5
+- Ant Design icons 5.0.0
+- dayJs 1.11.7
+- babel-browser
+- babel-require
 
 ## DevelopmentPlan
 
