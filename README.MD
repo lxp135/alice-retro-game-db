@@ -15,7 +15,19 @@
 
 目前家用机计划收录Family Computer、Super Famicom、Mega Drive/Sega Genesis和PC Engine四款机型及其游戏，掌机计划收录Atari Lynx、GameGear和GameBoy/GameBoy Color四款机型及其游戏。
 
-后续收录计划待定……
+主机机型提供中/日/英文名称、图标、实机图、设计图、首发日期、厂商、配置、机型介绍等信息。
+
+游戏提供编号、中/日/英文名称、首发日期、售价（含币种）、地区、游戏类型、游戏介绍、玩家数量、平台、厂商、展示图、插画、海报、包装盒图、卡带图、演示视频等信息。
+
+提供强大的搜索功能：支持跨机型、跨地区搜索，支持中/日/英文名称模糊匹配，支持按游戏类型、地区、平台、厂商、语言筛选。
+
+提供ROM下载功能，支持汉化与修改版ROM下载，同一游戏可同时存在不同汉化版或修改版。
+
+提供游戏试玩功能，游戏可直接在页面运行，支持键盘（登录可自定义键位）和微软手柄操作。
+
+支持登录用户提交文字订正，补充缺失或错漏的图片，管理员审批后生效。
+
+支持导出Batocera Linux、Ark OS、Pegasus Frontend、JEL OS等模拟器系统的配置文件。
 
 ## 项目文档
     
@@ -36,15 +48,8 @@
 
 ## FrontEnd
 
-- jQuery 3.2.1 基础库
-- director 1.2.7 前端hash路由，有改动
-- jTemplates 0.8.4 前端模板引擎
-- Bootstrap v4.2.1 前端UI基础库
-- Beagle 1.7.0 Bootstrap4主题
-- jqGrid 5.3.1 表格组件
-- layer 3.1.1 Web弹层组件
-- select2 4.0.5 下拉框组件
-- zTree 3.5.36 树组件
+- React 17.0.2
+- AntD 4.18.3
 
 ## DevelopmentPlan
 
