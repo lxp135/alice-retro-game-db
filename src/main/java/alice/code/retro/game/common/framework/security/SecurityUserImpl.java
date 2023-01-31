@@ -48,7 +48,7 @@ public class SecurityUserImpl implements StpInterface {
 
         // 查询用户所属角色列表
         RoleUserRel baseRoleUserRelQuery = new RoleUserRel();
-        baseRoleUserRelQuery.setUserId((Long) loginId);
+        baseRoleUserRelQuery.setUserId(Long.valueOf(String.valueOf(loginId)));
         List<RoleUserRel> baseRoleUserRels = roleUserRelService.selectList(baseRoleUserRelQuery);
         if(baseRoleUserRels.size()>0){
 

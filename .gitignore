@@ -22,3 +22,4 @@ overlays/
 
 #config#
 application-test.yml
+log-test.xml
