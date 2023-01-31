@@ -19,3 +19,6 @@ target/
 #cas#
 overlays/
 /target/
+
+#config#
+application-test.yml

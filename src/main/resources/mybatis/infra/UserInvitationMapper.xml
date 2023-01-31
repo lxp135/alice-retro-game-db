@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 邀请码表SQL author by contact@liuxp.me -->
+<mapper namespace="alice.code.retro.game.dao.infra.UserInvitationDao" >
+    <!-- 映射关系 -->
+    <resultMap id="resultMap" type="alice.code.retro.game.domain.model.infra.UserInvitation" >
+        <id column="id" property="id" jdbcType="BIGINT" />       <!-- 主键 -->
+        <result column="user_id" property="userId" jdbcType="BIGINT" />       <!-- 用户编号 -->
+        <result column="user_account" property="userAccount" jdbcType="VARCHAR" />       <!-- 用户账号 -->
+        <result column="invitation_code" property="invitationCode" jdbcType="VARCHAR" />       <!-- 邀请码 -->
+        <result column="invited_user_id" property="invitedUserId" jdbcType="BIGINT" />       <!-- 被邀请用户编号 -->
+        <result column="invited_user_account" property="invitedUserAccount" jdbcType="VARCHAR" />       <!-- 被邀请用户账号 -->
+        <result column="is_used" property="isUsed" jdbcType="TINYINT" />       <!-- 是否已使用 0:未使用 1:已使用 -->
+        <result column="used_time" property="usedTime" jdbcType="TIMESTAMP" />       <!-- 使用时间 -->
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />       <!-- 创建时间 -->
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />       <!-- 更新时间 -->
+    </resultMap>
+
+    <!-- 查询列 -->
+    <sql id="queryColumns">
+        id,       /* 主键 */
+        user_id,       /* 用户编号 */
+        user_account,       /* 用户账号 */
+        invitation_code,       /* 邀请码 */
+        invited_user_id,       /* 被邀请用户编号 */
+        invited_user_account,       /* 被邀请用户账号 */
+        is_used,       /* 是否已使用 0:未使用 1:已使用 */
+        used_time,       /* 使用时间 */
+        create_time,       /* 创建时间 */
+        update_time       /* 更新时间 */
+    </sql>
+
+    <!-- 查询条件 -->
+    <sql id="queryClause">
+        <where>
+            <if test="id != null">
+                AND id = #{id, jdbcType=BIGINT}	/* 主键 */
+            </if>
+            <if test="idMin != null">
+                <![CDATA[ AND id > #{idMin, jdbcType=BIGINT} ]]>	/* 主键大于某值*/
+            </if>
+            <if test="idMax != null">
+                <![CDATA[ AND id < #{idMax, jdbcType=BIGINT} ]]>	/* 主键小于某值 */
+            </if>
+            <if test="userId != null" >
+                AND user_id = #{userId,jdbcType=BIGINT}       /* 用户编号 */
+            </if>
+            <if test="userAccount != null and userAccount != ''" >
+                AND user_account = #{userAccount,jdbcType=VARCHAR}       /* 用户账号 */
+            </if>
+            <if test="invitationCode != null and invitationCode != ''" >
+                AND invitation_code = #{invitationCode,jdbcType=VARCHAR}       /* 邀请码 */
+            </if>
+            <if test="invitedUserId != null" >
+                AND invited_user_id = #{invitedUserId,jdbcType=BIGINT}       /* 被邀请用户编号 */
+            </if>
+            <if test="invitedUserAccount != null and invitedUserAccount != ''" >
+                AND invited_user_account = #{invitedUserAccount,jdbcType=VARCHAR}       /* 被邀请用户账号 */
+            </if>
+            <if test="isUsed != null" >
+                AND is_used = #{isUsed,jdbcType=TINYINT}       /* 是否已使用 0:未使用 1:已使用 */
+            </if>
+            <if test="usedTimeBegin != null" >
+                <![CDATA[ AND used_time >= #{usedTimeBegin,jdbcType=TIMESTAMP} ]]>       /* 使用时间/起 */
+            </if>
+            <if test="usedTimeEnd != null" >
+                <![CDATA[ AND used_time <= #{usedTimeEnd,jdbcType=TIMESTAMP} ]]>       /* 使用时间/止 */
+            </if>
+            <if test="createTimeBegin != null" >
+                <![CDATA[ AND create_time >= #{createTimeBegin,jdbcType=TIMESTAMP} ]]>       /* 创建时间/起 */
+            </if>
+            <if test="createTimeEnd != null" >
+                <![CDATA[ AND create_time <= #{createTimeEnd,jdbcType=TIMESTAMP} ]]>       /* 创建时间/止 */
+            </if>
+            <if test="updateTimeBegin != null" >
+                <![CDATA[ AND update_time >= #{updateTimeBegin,jdbcType=TIMESTAMP} ]]>       /* 更新时间/起 */
+            </if>
+            <if test="updateTimeEnd != null" >
+                <![CDATA[ AND update_time <= #{updateTimeEnd,jdbcType=TIMESTAMP} ]]>       /* 更新时间/止 */
+            </if>
+        </where>
+    </sql>
+
+    <!-- 排序 -->
+    <sql id="sortClause">
+        <if test="_sort != null">
+            ORDER BY
+            <foreach collection="_sort" item="item" index="index" separator=",">
+                <choose>
+                    <when test="item.propertyName != null and item.propertyName == 'id'">
+                        id    /* 主键 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <when test="item.propertyName != null and item.propertyName == 'userId'">
+                        user_id    /* 用户编号 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <when test="item.propertyName != null and item.propertyName == 'userAccount'">
+                        user_account    /* 用户账号 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <when test="item.propertyName != null and item.propertyName == 'invitationCode'">
+                        invitation_code    /* 邀请码 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <when test="item.propertyName != null and item.propertyName == 'invitedUserId'">
+                        invited_user_id    /* 被邀请用户编号 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <when test="item.propertyName != null and item.propertyName == 'invitedUserAccount'">
+                        invited_user_account    /* 被邀请用户账号 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <when test="item.propertyName != null and item.propertyName == 'isUsed'">
+                        is_used    /* 是否已使用 0:未使用 1:已使用 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <when test="item.propertyName != null and item.propertyName == 'usedTime'">
+                        used_time    /* 使用时间 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <when test="item.propertyName != null and item.propertyName == 'createTime'">
+                        create_time    /* 创建时间 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <when test="item.propertyName != null and item.propertyName == 'updateTime'">
+                        update_time    /* 更新时间 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <otherwise>update_time DESC</otherwise>
+                </choose>
+            </foreach>
+        </if>
+    </sql>
+
+    <!-- 分页 -->
+    <sql id="pageClause">
+        <if test="_page != null">
+            limit #{_page.offset, jdbcType=INTEGER}, #{_page.limit, jdbcType=INTEGER}
+        </if>
+    </sql>
+
+    <!-- 插入数据 -->
+    <insert id="insert" parameterType="alice.code.retro.game.domain.model.infra.UserInvitation" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO infra_user_invitation (
+            user_id,                      /* 用户编号 */
+            user_account,                      /* 用户账号 */
+            invitation_code,                      /* 邀请码 */
+            invited_user_id,                      /* 被邀请用户编号 */
+            invited_user_account,                      /* 被邀请用户账号 */
+            is_used,                      /* 是否已使用 0:未使用 1:已使用 */
+            used_time,                      /* 使用时间 */
+            create_time,                      /* 创建时间 */
+            update_time                      /* 更新时间 */
+        )VALUES(
+            #{userId, jdbcType=BIGINT},                 /* 用户编号 */
+            #{userAccount, jdbcType=VARCHAR},                 /* 用户账号 */
+            #{invitationCode, jdbcType=VARCHAR},                 /* 邀请码 */
+            #{invitedUserId, jdbcType=BIGINT},                 /* 被邀请用户编号 */
+            #{invitedUserAccount, jdbcType=VARCHAR},                 /* 被邀请用户账号 */
+            #{isUsed, jdbcType=TINYINT},                 /* 是否已使用 0:未使用 1:已使用 */
+            #{usedTime, jdbcType=TIMESTAMP},                 /* 使用时间 */
+            #{createTime, jdbcType=TIMESTAMP},                 /* 创建时间 */
+            #{updateTime, jdbcType=TIMESTAMP}                 /* 更新时间 */
+        )
+    </insert>
+
+    <!-- 批量插入数据 -->
+    <insert id="batchInsert" parameterType="java.util.List" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO infra_user_invitation (
+            user_id,                      /* 用户编号 */
+            user_account,                      /* 用户账号 */
+            invitation_code,                      /* 邀请码 */
+            invited_user_id,                      /* 被邀请用户编号 */
+            invited_user_account,                      /* 被邀请用户账号 */
+            is_used,                      /* 是否已使用 0:未使用 1:已使用 */
+            used_time,                      /* 使用时间 */
+            create_time,                      /* 创建时间 */
+            update_time                      /* 更新时间 */
+        )VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+                #{item.userId, jdbcType=BIGINT},                 /* 用户编号 */
+                #{item.userAccount, jdbcType=VARCHAR},                 /* 用户账号 */
+                #{item.invitationCode, jdbcType=VARCHAR},                 /* 邀请码 */
+                #{item.invitedUserId, jdbcType=BIGINT},                 /* 被邀请用户编号 */
+                #{item.invitedUserAccount, jdbcType=VARCHAR},                 /* 被邀请用户账号 */
+                #{item.isUsed, jdbcType=TINYINT},                 /* 是否已使用 0:未使用 1:已使用 */
+                #{item.usedTime, jdbcType=TIMESTAMP},                 /* 使用时间 */
+                #{item.createTime, jdbcType=TIMESTAMP},                 /* 创建时间 */
+                #{item.updateTime, jdbcType=TIMESTAMP}                 /* 更新时间 */
+            )
+        </foreach>
+    </insert>
+
+    <!-- 按主键更新 -->
+    <update id="updateByPrimaryKey" parameterType="java.util.Map">
+        <if test="_parameter != null">
+            UPDATE infra_user_invitation
+            <set>
+                <if test="userId != null">
+                    user_id = #{userId, jdbcType=BIGINT},    /* 用户编号 */
+                </if>
+                <if test="userAccount != null">
+                    user_account = #{userAccount, jdbcType=VARCHAR},    /* 用户账号 */
+                </if>
+                <if test="invitationCode != null">
+                    invitation_code = #{invitationCode, jdbcType=VARCHAR},    /* 邀请码 */
+                </if>
+                <if test="invitedUserId != null">
+                    invited_user_id = #{invitedUserId, jdbcType=BIGINT},    /* 被邀请用户编号 */
+                </if>
+                <if test="invitedUserAccount != null">
+                    invited_user_account = #{invitedUserAccount, jdbcType=VARCHAR},    /* 被邀请用户账号 */
+                </if>
+                <if test="isUsed != null">
+                    is_used = #{isUsed, jdbcType=TINYINT},    /* 是否已使用 0:未使用 1:已使用 */
+                </if>
+                <if test="usedTime != null">
+                    used_time = #{usedTime, jdbcType=TIMESTAMP},    /* 使用时间 */
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime, jdbcType=TIMESTAMP},    /* 创建时间 */
+                </if>
+                <if test="updateTime != null">
+                    update_time = #{updateTime, jdbcType=TIMESTAMP},    /* 更新时间 */
+                </if>
+            </set>
+            <where>
+                id = #{id, jdbcType=BIGINT}	/* 主键 */
+            </where>
+        </if>
+    </update>
+
+    <!-- 按主键批量物理删除 -->
+    <delete id="batchDeleteByPrimaryKeyPhysically" parameterType="java.util.List">
+        <if test="_parameter != null">
+            DELETE FROM infra_user_invitation
+            <where>
+                id in	/* 主键集合 */
+                <foreach collection="list" item="id" open="(" separator="," close=")">
+                    #{id, jdbcType=BIGINT}
+                </foreach>
+            </where>
+        </if>
+    </delete>
+
+    <!-- 查询所有记录 -->
+    <select id="selectAll" resultMap="resultMap">
+        SELECT
+        <include refid="queryColumns"/>
+        FROM
+        infra_user_invitation
+    </select>
+
+    <!-- 按主键查询 -->
+    <select id="selectByPrimaryKey" resultMap="resultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="queryColumns"/>
+        FROM
+        infra_user_invitation
+        <where>
+            id = #{id, jdbcType=BIGINT}	/* 主键 */
+        </where>
+    </select>
+
+    <!-- 按主键集合查询 -->
+    <select id="selectByPrimaryKeys" resultMap="resultMap" parameterType="java.util.List">
+        SELECT
+        <include refid="queryColumns"/>
+        FROM
+        infra_user_invitation
+        <where>
+            id in	/* 主键集合 */
+            <foreach collection="list" item="id" open="(" separator="," close=")">
+                #{id, jdbcType=BIGINT}
+            </foreach>
+        </where>
+    </select>
+
+    <!-- 按条件查询 -->
+    <select id="selectByCondition" resultMap="resultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="queryColumns"/>
+        FROM
+        infra_user_invitation
+        <include refid="queryClause"/>
+        <include refid="sortClause"/>
+        <include refid="pageClause"/>
+    </select>
+
+    <!-- 按条件统计记录数 -->
+    <select id="countByCondition" resultType="java.lang.Long" parameterType="java.util.Map">
+        SELECT
+        COUNT(1)
+        FROM
+        infra_user_invitation
+        <include refid="queryClause"/>
+    </select>
+
+</mapper>

@@ -5,6 +5,11 @@
         <property name="dialect" value="MYSQL" />                                           <!-- SQL方言 -->
     </properties>
     <mappers>
-
+        <mapper resource="mybatis/infra/MenuMapper.xml" />                            <!-- 菜单 -->
+        <mapper resource="mybatis/infra/RoleMapper.xml" />                            <!-- 角色 -->
+        <mapper resource="mybatis/infra/RoleMenuRelMapper.xml" />                     <!-- 角色与菜单关系 -->
+        <mapper resource="mybatis/infra/RoleUserRelMapper.xml" />                     <!-- 角色与用户关系 -->
+        <mapper resource="mybatis/infra/UserInvitationMapper.xml" />                  <!-- 邀请码 -->
+        <mapper resource="mybatis/infra/UserMapper.xml" />                            <!-- 用户 -->
     </mappers>
 </configuration>

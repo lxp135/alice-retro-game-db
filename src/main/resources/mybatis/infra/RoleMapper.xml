@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 角色基本信息表SQL author by contact@liuxp.me -->
+<mapper namespace="alice.code.retro.game.dao.infra.RoleDao" >
+    <!-- 映射关系 -->
+    <resultMap id="resultMap" type="alice.code.retro.game.domain.model.infra.Role" >
+        <id column="id" property="id" jdbcType="BIGINT" />       <!-- 主键 -->
+        <result column="role_name" property="roleName" jdbcType="VARCHAR" />       <!-- 角色名称 -->
+        <result column="role_description" property="roleDescription" jdbcType="VARCHAR" />       <!-- 角色描述 -->
+        <result column="is_enable" property="isEnable" jdbcType="TINYINT" />       <!-- 状态 0:正常 1:禁用 -->
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />       <!-- 创建时间 -->
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />       <!-- 更新时间 -->
+    </resultMap>
+
+    <!-- 查询列 -->
+    <sql id="queryColumns">
+        id,       /* 主键 */
+        role_name,       /* 角色名称 */
+        role_description,       /* 角色描述 */
+        is_enable,       /* 状态 0:正常 1:禁用 */
+        create_time,       /* 创建时间 */
+        update_time       /* 更新时间 */
+    </sql>
+
+    <!-- 查询条件 -->
+    <sql id="queryClause">
+        <where>
+            <if test="id != null">
+                AND id = #{id, jdbcType=BIGINT}	/* 主键 */
+            </if>
+            <if test="idMin != null">
+                <![CDATA[ AND id > #{idMin, jdbcType=BIGINT} ]]>	/* 主键大于某值*/
+            </if>
+            <if test="idMax != null">
+                <![CDATA[ AND id < #{idMax, jdbcType=BIGINT} ]]>	/* 主键小于某值 */
+            </if>
+            <if test="roleName != null and roleName != ''" >
+                AND role_name = #{roleName,jdbcType=VARCHAR}       /* 角色名称 */
+            </if>
+            <if test="roleDescription != null and roleDescription != ''" >
+                AND role_description = #{roleDescription,jdbcType=VARCHAR}       /* 角色描述 */
+            </if>
+            <if test="isEnable != null" >
+                AND is_enable = #{isEnable,jdbcType=TINYINT}       /* 状态 0:正常 1:禁用 */
+            </if>
+            <if test="createTimeBegin != null" >
+                <![CDATA[ AND create_time >= #{createTimeBegin,jdbcType=TIMESTAMP} ]]>       /* 创建时间/起 */
+            </if>
+            <if test="createTimeEnd != null" >
+                <![CDATA[ AND create_time <= #{createTimeEnd,jdbcType=TIMESTAMP} ]]>       /* 创建时间/止 */
+            </if>
+            <if test="updateTimeBegin != null" >
+                <![CDATA[ AND update_time >= #{updateTimeBegin,jdbcType=TIMESTAMP} ]]>       /* 更新时间/起 */
+            </if>
+            <if test="updateTimeEnd != null" >
+                <![CDATA[ AND update_time <= #{updateTimeEnd,jdbcType=TIMESTAMP} ]]>       /* 更新时间/止 */
+            </if>
+        </where>
+    </sql>
+
+    <!-- 排序 -->
+    <sql id="sortClause">
+        <if test="_sort != null">
+            ORDER BY
+            <foreach collection="_sort" item="item" index="index" separator=",">
+                <choose>
+                    <when test="item.propertyName != null and item.propertyName == 'id'">
+                        id    /* 主键 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <when test="item.propertyName != null and item.propertyName == 'roleName'">
+                        role_name    /* 角色名称 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <when test="item.propertyName != null and item.propertyName == 'roleDescription'">
+                        role_description    /* 角色描述 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <when test="item.propertyName != null and item.propertyName == 'isEnable'">
+                        is_enable    /* 状态 0:正常 1:禁用 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <when test="item.propertyName != null and item.propertyName == 'createTime'">
+                        create_time    /* 创建时间 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <when test="item.propertyName != null and item.propertyName == 'updateTime'">
+                        update_time    /* 更新时间 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <otherwise>update_time DESC</otherwise>
+                </choose>
+            </foreach>
+        </if>
+    </sql>
+
+    <!-- 分页 -->
+    <sql id="pageClause">
+        <if test="_page != null">
+            limit #{_page.offset, jdbcType=INTEGER}, #{_page.limit, jdbcType=INTEGER}
+        </if>
+    </sql>
+
+    <!-- 插入数据 -->
+    <insert id="insert" parameterType="alice.code.retro.game.domain.model.infra.Role" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO infra_role (
+            role_name,                      /* 角色名称 */
+            role_description,                      /* 角色描述 */
+            is_enable,                      /* 状态 0:正常 1:禁用 */
+            create_time,                      /* 创建时间 */
+            update_time                      /* 更新时间 */
+        )VALUES(
+            #{roleName, jdbcType=VARCHAR},                 /* 角色名称 */
+            #{roleDescription, jdbcType=VARCHAR},                 /* 角色描述 */
+            #{isEnable, jdbcType=TINYINT},                 /* 状态 0:正常 1:禁用 */
+            #{createTime, jdbcType=TIMESTAMP},                 /* 创建时间 */
+            #{updateTime, jdbcType=TIMESTAMP}                 /* 更新时间 */
+        )
+    </insert>
+
+    <!-- 批量插入数据 -->
+    <insert id="batchInsert" parameterType="java.util.List" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO infra_role (
+            role_name,                      /* 角色名称 */
+            role_description,                      /* 角色描述 */
+            is_enable,                      /* 状态 0:正常 1:禁用 */
+            create_time,                      /* 创建时间 */
+            update_time                      /* 更新时间 */
+        )VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+                #{item.roleName, jdbcType=VARCHAR},                 /* 角色名称 */
+                #{item.roleDescription, jdbcType=VARCHAR},                 /* 角色描述 */
+                #{item.isEnable, jdbcType=TINYINT},                 /* 状态 0:正常 1:禁用 */
+                #{item.createTime, jdbcType=TIMESTAMP},                 /* 创建时间 */
+                #{item.updateTime, jdbcType=TIMESTAMP}                 /* 更新时间 */
+            )
+        </foreach>
+    </insert>
+
+    <!-- 按主键更新 -->
+    <update id="updateByPrimaryKey" parameterType="java.util.Map">
+        <if test="_parameter != null">
+            UPDATE infra_role
+            <set>
+                <if test="roleName != null">
+                    role_name = #{roleName, jdbcType=VARCHAR},    /* 角色名称 */
+                </if>
+                <if test="roleDescription != null">
+                    role_description = #{roleDescription, jdbcType=VARCHAR},    /* 角色描述 */
+                </if>
+                <if test="isEnable != null">
+                    is_enable = #{isEnable, jdbcType=TINYINT},    /* 状态 0:正常 1:禁用 */
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime, jdbcType=TIMESTAMP},    /* 创建时间 */
+                </if>
+                <if test="updateTime != null">
+                    update_time = #{updateTime, jdbcType=TIMESTAMP},    /* 更新时间 */
+                </if>
+            </set>
+            <where>
+                id = #{id, jdbcType=BIGINT}	/* 主键 */
+            </where>
+        </if>
+    </update>
+
+    <!-- 按主键批量物理删除 -->
+    <delete id="batchDeleteByPrimaryKeyPhysically" parameterType="java.util.List">
+        <if test="_parameter != null">
+            DELETE FROM infra_role
+            <where>
+                id in	/* 主键集合 */
+                <foreach collection="list" item="id" open="(" separator="," close=")">
+                    #{id, jdbcType=BIGINT}
+                </foreach>
+            </where>
+        </if>
+    </delete>
+
+    <!-- 查询所有记录 -->
+    <select id="selectAll" resultMap="resultMap">
+        SELECT
+        <include refid="queryColumns"/>
+        FROM
+        infra_role
+    </select>
+
+    <!-- 按主键查询 -->
+    <select id="selectByPrimaryKey" resultMap="resultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="queryColumns"/>
+        FROM
+        infra_role
+        <where>
+            id = #{id, jdbcType=BIGINT}	/* 主键 */
+        </where>
+    </select>
+
+    <!-- 按主键集合查询 -->
+    <select id="selectByPrimaryKeys" resultMap="resultMap" parameterType="java.util.List">
+        SELECT
+        <include refid="queryColumns"/>
+        FROM
+        infra_role
+        <where>
+            id in	/* 主键集合 */
+            <foreach collection="list" item="id" open="(" separator="," close=")">
+                #{id, jdbcType=BIGINT}
+            </foreach>
+        </where>
+    </select>
+
+    <!-- 按条件查询 -->
+    <select id="selectByCondition" resultMap="resultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="queryColumns"/>
+        FROM
+        infra_role
+        <include refid="queryClause"/>
+        <include refid="sortClause"/>
+        <include refid="pageClause"/>
+    </select>
+
+    <!-- 按条件统计记录数 -->
+    <select id="countByCondition" resultType="java.lang.Long" parameterType="java.util.Map">
+        SELECT
+        COUNT(1)
+        FROM
+        infra_role
+        <include refid="queryClause"/>
+    </select>
+
+</mapper>

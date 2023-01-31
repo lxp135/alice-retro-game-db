@@ -30,3 +30,9 @@ spring:
 mybatis:
     # 加载全局的配置文件
     configLocation: classpath:mybatis/mybatis-config.xml
+#####################################
+## Resource配置
+#####################################
+resource:
+    # 资源根目录
+    root: E:\ALICE_GAME_RES

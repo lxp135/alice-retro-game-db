@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 角色与用户关系表SQL author by contact@liuxp.me -->
+<mapper namespace="alice.code.retro.game.dao.infra.RoleUserRelDao" >
+    <!-- 映射关系 -->
+    <resultMap id="resultMap" type="alice.code.retro.game.domain.model.infra.RoleUserRel" >
+        <id column="id" property="id" jdbcType="BIGINT" />       <!-- 主键 -->
+        <result column="role_id" property="roleId" jdbcType="BIGINT" />       <!-- 角色表主键 -->
+        <result column="user_id" property="userId" jdbcType="BIGINT" />       <!-- 用户表主键 -->
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />       <!-- 创建时间 -->
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />       <!-- 更新时间 -->
+    </resultMap>
+
+    <!-- 查询列 -->
+    <sql id="queryColumns">
+        id,       /* 主键 */
+        role_id,       /* 角色表主键 */
+        user_id,       /* 用户表主键 */
+        create_time,       /* 创建时间 */
+        update_time       /* 更新时间 */
+    </sql>
+
+    <!-- 查询条件 -->
+    <sql id="queryClause">
+        <where>
+            <if test="id != null">
+                AND id = #{id, jdbcType=BIGINT}	/* 主键 */
+            </if>
+            <if test="idMin != null">
+                <![CDATA[ AND id > #{idMin, jdbcType=BIGINT} ]]>	/* 主键大于某值*/
+            </if>
+            <if test="idMax != null">
+                <![CDATA[ AND id < #{idMax, jdbcType=BIGINT} ]]>	/* 主键小于某值 */
+            </if>
+            <if test="roleId != null" >
+                AND role_id = #{roleId,jdbcType=BIGINT}       /* 角色表主键 */
+            </if>
+            <if test="userId != null" >
+                AND user_id = #{userId,jdbcType=BIGINT}       /* 用户表主键 */
+            </if>
+            <if test="createTimeBegin != null" >
+                <![CDATA[ AND create_time >= #{createTimeBegin,jdbcType=TIMESTAMP} ]]>       /* 创建时间/起 */
+            </if>
+            <if test="createTimeEnd != null" >
+                <![CDATA[ AND create_time <= #{createTimeEnd,jdbcType=TIMESTAMP} ]]>       /* 创建时间/止 */
+            </if>
+            <if test="updateTimeBegin != null" >
+                <![CDATA[ AND update_time >= #{updateTimeBegin,jdbcType=TIMESTAMP} ]]>       /* 更新时间/起 */
+            </if>
+            <if test="updateTimeEnd != null" >
+                <![CDATA[ AND update_time <= #{updateTimeEnd,jdbcType=TIMESTAMP} ]]>       /* 更新时间/止 */
+            </if>
+        </where>
+    </sql>
+
+    <!-- 排序 -->
+    <sql id="sortClause">
+        <if test="_sort != null">
+            ORDER BY
+            <foreach collection="_sort" item="item" index="index" separator=",">
+                <choose>
+                    <when test="item.propertyName != null and item.propertyName == 'id'">
+                        id    /* 主键 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <when test="item.propertyName != null and item.propertyName == 'roleId'">
+                        role_id    /* 角色表主键 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <when test="item.propertyName != null and item.propertyName == 'userId'">
+                        user_id    /* 用户表主键 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <when test="item.propertyName != null and item.propertyName == 'createTime'">
+                        create_time    /* 创建时间 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <when test="item.propertyName != null and item.propertyName == 'updateTime'">
+                        update_time    /* 更新时间 */
+                        <choose>
+                            <when test="item.ascending">ASC</when>
+                            <otherwise>DESC</otherwise>
+                        </choose>
+                    </when>
+                    <otherwise>update_time DESC</otherwise>
+                </choose>
+            </foreach>
+        </if>
+    </sql>
+
+    <!-- 分页 -->
+    <sql id="pageClause">
+        <if test="_page != null">
+            limit #{_page.offset, jdbcType=INTEGER}, #{_page.limit, jdbcType=INTEGER}
+        </if>
+    </sql>
+
+    <!-- 插入数据 -->
+    <insert id="insert" parameterType="alice.code.retro.game.domain.model.infra.RoleUserRel" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO infra_role_user_rel (
+            role_id,                      /* 角色表主键 */
+            user_id,                      /* 用户表主键 */
+            create_time,                      /* 创建时间 */
+            update_time                      /* 更新时间 */
+        )VALUES(
+            #{roleId, jdbcType=BIGINT},                 /* 角色表主键 */
+            #{userId, jdbcType=BIGINT},                 /* 用户表主键 */
+            #{createTime, jdbcType=TIMESTAMP},                 /* 创建时间 */
+            #{updateTime, jdbcType=TIMESTAMP}                 /* 更新时间 */
+        )
+    </insert>
+
+    <!-- 批量插入数据 -->
+    <insert id="batchInsert" parameterType="java.util.List" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO infra_role_user_rel (
+            role_id,                      /* 角色表主键 */
+            user_id,                      /* 用户表主键 */
+            create_time,                      /* 创建时间 */
+            update_time                      /* 更新时间 */
+        )VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+                #{item.roleId, jdbcType=BIGINT},                 /* 角色表主键 */
+                #{item.userId, jdbcType=BIGINT},                 /* 用户表主键 */
+                #{item.createTime, jdbcType=TIMESTAMP},                 /* 创建时间 */
+                #{item.updateTime, jdbcType=TIMESTAMP}                 /* 更新时间 */
+            )
+        </foreach>
+    </insert>
+
+    <!-- 按主键更新 -->
+    <update id="updateByPrimaryKey" parameterType="java.util.Map">
+        <if test="_parameter != null">
+            UPDATE infra_role_user_rel
+            <set>
+                <if test="roleId != null">
+                    role_id = #{roleId, jdbcType=BIGINT},    /* 角色表主键 */
+                </if>
+                <if test="userId != null">
+                    user_id = #{userId, jdbcType=BIGINT},    /* 用户表主键 */
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime, jdbcType=TIMESTAMP},    /* 创建时间 */
+                </if>
+                <if test="updateTime != null">
+                    update_time = #{updateTime, jdbcType=TIMESTAMP},    /* 更新时间 */
+                </if>
+            </set>
+            <where>
+                id = #{id, jdbcType=BIGINT}	/* 主键 */
+            </where>
+        </if>
+    </update>
+
+    <!-- 按主键批量物理删除 -->
+    <delete id="batchDeleteByPrimaryKeyPhysically" parameterType="java.util.List">
+        <if test="_parameter != null">
+            DELETE FROM infra_role_user_rel
+            <where>
+                id in	/* 主键集合 */
+                <foreach collection="list" item="id" open="(" separator="," close=")">
+                    #{id, jdbcType=BIGINT}
+                </foreach>
+            </where>
+        </if>
+    </delete>
+
+    <!-- 查询所有记录 -->
+    <select id="selectAll" resultMap="resultMap">
+        SELECT
+        <include refid="queryColumns"/>
+        FROM
+        infra_role_user_rel
+    </select>
+
+    <!-- 按主键查询 -->
+    <select id="selectByPrimaryKey" resultMap="resultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="queryColumns"/>
+        FROM
+        infra_role_user_rel
+        <where>
+            id = #{id, jdbcType=BIGINT}	/* 主键 */
+        </where>
+    </select>
+
+    <!-- 按主键集合查询 -->
+    <select id="selectByPrimaryKeys" resultMap="resultMap" parameterType="java.util.List">
+        SELECT
+        <include refid="queryColumns"/>
+        FROM
+        infra_role_user_rel
+        <where>
+            id in	/* 主键集合 */
+            <foreach collection="list" item="id" open="(" separator="," close=")">
+                #{id, jdbcType=BIGINT}
+            </foreach>
+        </where>
+    </select>
+
+    <!-- 按条件查询 -->
+    <select id="selectByCondition" resultMap="resultMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="queryColumns"/>
+        FROM
+        infra_role_user_rel
+        <include refid="queryClause"/>
+        <include refid="sortClause"/>
+        <include refid="pageClause"/>
+    </select>
+
+    <!-- 按条件统计记录数 -->
+    <select id="countByCondition" resultType="java.lang.Long" parameterType="java.util.Map">
+        SELECT
+        COUNT(1)
+        FROM
+        infra_role_user_rel
+        <include refid="queryClause"/>
+    </select>
+
+</mapper>
