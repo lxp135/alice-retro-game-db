@@ -72,10 +72,10 @@ public class User extends AbstractEntity{
     /**
      * 用户状态 0:禁用 1:正常
      */
-    private Integer isEnable;
+    private Boolean isEnable;
     /**
      * 是否管理员 0:否 1:是
      */
-    private Integer isAdmin;
+    private Boolean isAdmin;
 
 }

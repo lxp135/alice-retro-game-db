@@ -5,9 +5,13 @@ import alice.code.retro.game.common.domain.PageParam;
 import alice.code.retro.game.common.domain.Result;
 import alice.code.retro.game.common.framework.MultiRequestBody;
 import alice.code.retro.game.common.util.ParamUtil;
+import alice.code.retro.game.domain.model.Account;
 import alice.code.retro.game.domain.model.infra.Menu;
+import alice.code.retro.game.service.infra.AuthService;
 import alice.code.retro.game.service.infra.MenuService;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.crypto.SecureUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,16 +27,21 @@ import java.util.List;
 @RequestMapping("/web/infra/auth")
 public class AuthController {
 
-    // 测试登录，浏览器访问： http://localhost:9091/web/infra/auth/login?username=zhang&password=123456
+    @Resource
+    AuthService authService;
+
+    // 测试登录，浏览器访问： http://localhost:9091/web/infra/auth/login?account=zhang&password=123456
     @RequestMapping("login")
     @ResponseBody
-    public String doLogin(String username, String password) {
-        // 此处仅作模拟示例，真实项目需要从数据库中查询数据进行比对
-        if("zhang".equals(username) && "123456".equals(password)) {
-            StpUtil.login(10001);
-            return "登录成功";
-        }
-        return "登录失败";
+    public Result<Account> login(String account, String password) {
+
+        Assert.notBlank(account, "account账号不能为空");
+        Assert.notBlank(password, "password密码不能为空");
+
+        Account result = authService.login(account, password);
+
+        return new Result<>(result);
+
     }
 
     // 查询登录状态，浏览器访问： http://localhost:9091/web/infra/auth/isLogin
