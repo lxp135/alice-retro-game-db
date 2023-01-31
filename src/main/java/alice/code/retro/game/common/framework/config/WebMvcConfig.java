@@ -1,7 +1,7 @@
 package alice.code.retro.game.common.framework.config;
 
 import alice.code.retro.game.common.framework.MultiRequestBodyArgumentResolver;
-import alice.code.retro.game.common.framework.interceptor.AccountExposingHandlerInterceptor;
+import cn.dev33.satoken.interceptor.SaInterceptor;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,6 +52,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AccountExposingHandlerInterceptor()).addPathPatterns("/", "/web/**");
+        // 注册 Sa-Token 拦截器，打开注解式鉴权功能
+        registry.addInterceptor(new SaInterceptor()).addPathPatterns("/web/**");
     }
 }

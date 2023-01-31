@@ -7,6 +7,7 @@ import alice.code.retro.game.common.framework.MultiRequestBody;
 import alice.code.retro.game.common.util.ParamUtil;
 import alice.code.retro.game.domain.model.infra.Menu;
 import alice.code.retro.game.service.infra.MenuService;
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/web/infra/menu")
+@SaCheckPermission("INFRA_MENU")
 public class MenuController{
 
     /**
