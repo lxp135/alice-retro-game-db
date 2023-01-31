@@ -40,11 +40,15 @@
 - MySQL 5.7
 
 ## BackEnd
-- SpringBoot 
-- Spring Security
-- SpringMVC
-- Spring
-- Mybatis
+- Java11
+- SpringBoot 2.6.14
+- SpringMVC 5.3.24
+- Mybatis 2.2.2
+- mysql-connector-j 8.0.31
+- sa-token 1.34.0
+- Fastjson2 2.0.23
+- HuTool 5.8.11
+- Lombok 1.18.24
 
 ## FrontEnd
 
