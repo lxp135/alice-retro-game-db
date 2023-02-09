@@ -1,6 +1,7 @@
 const {  Layout, Menu, Breadcrumb ,theme } = antd;
 const { SubMenu } = Menu;
 const { Header, Content, Sider,Footer } = Layout;
+const {BrowserRouter,Routes,Route,Link} = ReactRouterDOM;
 
 const SideMenu = () => {
 
@@ -8,17 +9,41 @@ const SideMenu = () => {
         token: { colorBgContainer },
     } = theme.useToken();
 
-    let menuClick = function(key){
+    let menuClick = (e) =>{
+        //注意this指向问题，采用箭头函数this就指向当前组件
         // alert(1);
-        console.log(key);
-        window.location.href = "#key"+key.key
+        // console.log(key);
+        // if(key.key === '5'){
+        //
+        //     window.location.href = "/about"
+        // }
+        // window.location.href = "#key"+key.key
+
+        // console.log(HistoryLibrary);
+        // HistoryLibrary.createBrowserHistory().push(key.key)
+
+        // this.props.history.push(key.path);
+
+        // this.props.to(e.key);
     }
+
+
 
     const menuItems = [
         {
-            key: 'center',
+            key: '/about',
             icon:React.createElement(icons['UserOutlined']),
-            label: '个人中心',
+            label: <Link to="/about">成员管理</Link>,
+        },
+        {
+            key: '/menu',
+            icon:React.createElement(icons['UserOutlined']),
+            label: <Link to="/menu">菜单管理</Link>,
+        },
+        {
+            key: '/role',
+            icon:React.createElement(icons['UserOutlined']),
+            label: <Link to="/role">角色管理</Link>,
         },
         {
             key: 'settings',
@@ -45,7 +70,7 @@ const SideMenu = () => {
             style={{ background: colorBgContainer }}
         >
             <Menu
-                onClick={menuClick}
+                // onClick={(e) =>{this.props.to(e.key);}}
                 mode="inline"
                 defaultSelectedKeys={['1']}
                 defaultOpenKeys={['sub1']}
