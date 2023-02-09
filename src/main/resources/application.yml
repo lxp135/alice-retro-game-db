@@ -11,6 +11,8 @@ spring:
         static-path-pattern: /**
         servlet:
             load-on-startup: 1
+        view:
+            suffix: .html
     freemarker:
         template-loader-path: classpath:/templates/
         prefix:
